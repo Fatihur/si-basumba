@@ -97,6 +97,12 @@
                     <span>Manajemen User</span>
                 </a>
             </div>
+            <div class="nav-item">
+                <a href="{{ route('admin.settings.index') }}" class="nav-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}">
+                    <i class="bi bi-gear"></i>
+                    <span>Pengaturan Aplikasi</span>
+                </a>
+            </div>
             @endif
 
             <div class="nav-item">

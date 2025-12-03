@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\JenisLitmasController;
 use App\Http\Controllers\Admin\KlienController;
 use App\Http\Controllers\Admin\LitmasController;
 use App\Http\Controllers\Admin\PetugasController;
+use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\WajibLaporController;
 use App\Http\Controllers\Auth\LoginController;
@@ -61,4 +62,8 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 
     // Users (Admin only)
     Route::resource('users', UserController::class)->except(['show'])->middleware('can:admin');
+
+    // Settings (Admin only)
+    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index')->middleware('can:admin');
+    Route::put('/settings', [SettingController::class, 'update'])->name('settings.update')->middleware('can:admin');
 });

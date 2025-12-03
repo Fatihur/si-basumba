@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AbhController;
 use App\Http\Controllers\Api\AlurPelayananController;
 use App\Http\Controllers\Api\LitmasController;
+use App\Http\Controllers\Api\SettingController;
 use App\Http\Controllers\Api\WajibLaporController;
 use Illuminate\Support\Facades\Route;
 
@@ -23,4 +24,7 @@ Route::prefix('v1')->group(function () {
 
     // Alur Pelayanan
     Route::get('/alur-pelayanan', [AlurPelayananController::class, 'index']);
+
+    // Settings
+    Route::get('/settings/whatsapp', [SettingController::class, 'getWhatsapp']);
 });
