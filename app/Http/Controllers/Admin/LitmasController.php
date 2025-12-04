@@ -7,6 +7,7 @@ use App\Models\AsalPermintaan;
 use App\Models\JenisLitmas;
 use App\Models\Litmas;
 use App\Models\LitmasFile;
+use App\Models\Notification;
 use App\Models\Petugas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -46,7 +47,20 @@ class LitmasController extends Controller
             'catatan' => 'nullable|string',
         ]);
 
+        $oldStatus = $litma->status;
         $litma->update($validated);
+
+        $statusLabels = ['menunggu' => 'Menunggu', 'diproses' => 'Diproses', 'selesai' => 'Selesai'];
+        Notification::create([
+            'type' => $validated['status'] === 'selesai' ? 'success' : 'info',
+            'title' => 'Status LITMAS Diperbarui',
+            'message' => "LITMAS {$litma->nama_narapidana} diubah ke {$statusLabels[$validated['status']]} oleh " . auth()->user()->name,
+            'source' => 'web',
+            'icon' => 'bi-file-earmark-text',
+            'link' => route('admin.litmas.show', $litma->id),
+            'model_type' => Litmas::class,
+            'model_id' => $litma->id,
+        ]);
 
         return redirect()->route('admin.litmas.show', $litma)
             ->with('success', 'Status LITMAS berhasil diperbarui.');

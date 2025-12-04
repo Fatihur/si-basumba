@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\InstansiKepolisianController;
 use App\Http\Controllers\Admin\JenisLitmasController;
 use App\Http\Controllers\Admin\KlienController;
 use App\Http\Controllers\Admin\LitmasController;
+use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\PetugasController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\UserController;
@@ -66,4 +67,11 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     // Settings (Admin only)
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index')->middleware('can:admin');
     Route::put('/settings', [SettingController::class, 'update'])->name('settings.update')->middleware('can:admin');
+
+    // Notifications
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::get('/notifications/unread', [NotificationController::class, 'getUnread'])->name('notifications.unread');
+    Route::post('/notifications/{notification}/read', [NotificationController::class, 'markAsRead'])->name('notifications.mark-read');
+    Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.mark-all-read');
+    Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
 });

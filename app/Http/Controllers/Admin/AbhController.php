@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Abh;
 use App\Models\InstansiKepolisian;
+use App\Models\Notification;
 use App\Models\Petugas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -45,6 +46,18 @@ class AbhController extends Controller
         ]);
 
         $abh->update($validated);
+
+        $statusLabels = ['menunggu' => 'Menunggu', 'diproses' => 'Diproses', 'selesai' => 'Selesai'];
+        Notification::create([
+            'type' => $validated['status'] === 'selesai' ? 'success' : 'info',
+            'title' => 'Status ABH Diperbarui',
+            'message' => "Pendampingan ABH (No. {$abh->nomor_surat_permintaan}) diubah ke {$statusLabels[$validated['status']]} oleh " . auth()->user()->name,
+            'source' => 'web',
+            'icon' => 'bi-person-badge',
+            'link' => route('admin.abh.show', $abh->id),
+            'model_type' => Abh::class,
+            'model_id' => $abh->id,
+        ]);
 
         return redirect()->route('admin.abh.show', $abh)
             ->with('success', 'Status ABH berhasil diperbarui.');

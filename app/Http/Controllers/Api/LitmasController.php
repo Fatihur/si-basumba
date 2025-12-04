@@ -7,6 +7,7 @@ use App\Models\AsalPermintaan;
 use App\Models\JenisLitmas;
 use App\Models\Litmas;
 use App\Models\LitmasFile;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -86,6 +87,17 @@ class LitmasController extends Controller
                     ]);
                 }
             }
+
+            Notification::create([
+                'type' => 'info',
+                'title' => 'Permohonan LITMAS Baru',
+                'message' => "Permohonan LITMAS baru untuk {$litmas->nama_narapidana} (Reg: {$litmas->nomor_registrasi})",
+                'source' => 'mobile',
+                'icon' => 'bi-file-earmark-text',
+                'link' => route('admin.litmas.show', $litmas->id),
+                'model_type' => Litmas::class,
+                'model_id' => $litmas->id,
+            ]);
 
             DB::commit();
 

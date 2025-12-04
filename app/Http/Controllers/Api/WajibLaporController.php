@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Notification;
 use App\Models\Petugas;
 use App\Models\WajibLapor;
 use Illuminate\Http\Request;
@@ -58,6 +59,17 @@ class WajibLaporController extends Controller
             'status_bimbingan' => $request->status_bimbingan,
             'petugas_id' => $request->petugas_id,
             'foto_selfie' => $fotoPath,
+        ]);
+
+        Notification::create([
+            'type' => 'info',
+            'title' => 'Wajib Lapor Baru',
+            'message' => "Laporan baru dari {$request->nama_lengkap} ({$request->email})",
+            'source' => 'mobile',
+            'icon' => 'bi-clipboard-check',
+            'link' => route('admin.wajib-lapor.show', $wajibLapor->id),
+            'model_type' => WajibLapor::class,
+            'model_id' => $wajibLapor->id,
         ]);
 
         return response()->json([

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Notification;
 use App\Models\Petugas;
 use App\Models\WajibLapor;
 use Illuminate\Http\Request;
@@ -50,6 +51,18 @@ class WajibLaporController extends Controller
             'catatan_verifikasi' => $validated['catatan_verifikasi'],
             'verified_by' => auth()->id(),
             'verified_at' => now(),
+        ]);
+
+        $statusText = $validated['status_verifikasi'] === 'disetujui' ? 'Disetujui' : 'Ditolak';
+        Notification::create([
+            'type' => $validated['status_verifikasi'] === 'disetujui' ? 'success' : 'warning',
+            'title' => 'Wajib Lapor Diverifikasi',
+            'message' => "Laporan {$wajibLapor->nama_lengkap} telah {$statusText} oleh " . auth()->user()->name,
+            'source' => 'web',
+            'icon' => 'bi-clipboard-check',
+            'link' => route('admin.wajib-lapor.show', $wajibLapor->id),
+            'model_type' => WajibLapor::class,
+            'model_id' => $wajibLapor->id,
         ]);
 
         return redirect()->route('admin.wajib-lapor.index')

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Abh;
 use App\Models\InstansiKepolisian;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -54,6 +55,17 @@ class AbhController extends Controller
         }
 
         $abh = Abh::create($data);
+
+        Notification::create([
+            'type' => 'info',
+            'title' => 'Pendampingan ABH Baru',
+            'message' => "Permintaan pendampingan ABH baru - No. Surat: {$request->nomor_surat_permintaan}",
+            'source' => 'mobile',
+            'icon' => 'bi-person-badge',
+            'link' => route('admin.abh.show', $abh->id),
+            'model_type' => Abh::class,
+            'model_id' => $abh->id,
+        ]);
 
         return response()->json([
             'success' => true,

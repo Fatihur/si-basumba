@@ -201,13 +201,8 @@ function initNotifications() {
     const btnAlt = document.querySelector('.nav-action-btn');
     
     const showNotification = () => {
-        // Create toast notification
-        const toast = document.createElement('div');
-        toast.className = 'alert alert-info';
-        toast.style.cssText = 'position: fixed; top: 80px; right: 20px; z-index: 1000; max-width: 300px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);';
-        toast.innerHTML = '<i class="bi bi-bell"></i> <span>You have 5 new notifications</span>';
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 3000);
+        // Redirect to notifications page instead of showing toast
+        window.location.href = '/admin/notifications';
     };
     
     if (btn) btn.addEventListener('click', showNotification);
